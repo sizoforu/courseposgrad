@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Curso-postgrado</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=chrome" />
+    <script src="js/aframe-master-v1.4.2.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
+  
+    <link rel="preload" as="image" href="media/contacts_course.jpg" crossorigin="anonymous">
+    <link rel="preload" as="image" href="media/curriculum_course.jpg" crossorigin="anonymous">
+    <link rel="preload" as="image" href="media/information_course.jpg" crossorigin="anonymous">
+</head>
+
+<body>
+    <a-scene background="color: #212" environment="preset: starry" cursor="rayOrigin:mouse">
+        <a-light type="directional" color="#fff" intensity="0.2" position="-1 2 1"></a-light>
+        <a-light type="ambient" color="#fff"></a-light>
+        <a-camera id="camera" raycaster="objects: .clickable" cursor="rayOrigin: mouse"></a-camera>
+        
+        <a-assets>
+            <img id="logoviro" src="media/logo_viro.png" crossorigin="anonymous">
+            <video id="video" preload="auto" src="media/sintel.mp4" loop="false" playsinline style="display:none" crossorigin="anonymous"></video>
+            <a-mixin id="scale" scale="1 1 1" geometry="primitive: plane; width: 3.0; height: 1.2" pivot="0 0.5 0"></a-mixin>
+            <a-mixin id="unhinge" animation="property: rotation; to: 0 0 0; dur: 1000"></a-mixin>
+            <a-mixin id="image-mixin" geometry="primitive: plane; width: 0.9; height: 1.3" rotation="0 -30 0" scale="7 7 7" position="6 -2 0.962"></a-mixin>
+        </a-assets>
+        
+        <a-entity id="myAnimation" scale="0.9 0.9 0.9" animation__position="property: position; to: -4.5 6 -8; dur: 1500" animation__rotation="property: rotation; from: 0 60 0; to: 0 30 0; dur: 2000">
+            <!-- Box 1 -->
+            <a-box id="box1" mixin="scale unhinge" color="#F16745" position="0 -2 0" rotation="-20 0 0" animation="delay: 100" onclick="toggleVisibility('image1')" animation__scale="property: scale; to: 1.1 1.1 1.1; dur: 100; startEvents: mouseenter" animation__scale_reverse="property: scale; to: 1 1 1; dur: 100; startEvents: mouseleave">
+                <a-text value="CONTACTOS" position="-1 -0.05 0.5" font="roboto" font-size="0.7" color="#050505" width="7.0"></a-text>
+            </a-box>
+            <a-image id="image1" mixin="image-mixin" src="media/contacts_course.jpg" visible="false"></a-image>
+            
+            <!-- Box 2 -->
+            <a-box id="box2" mixin="scale unhinge" color="#FFC65D" rotation="-175 0 0" position="0 -4 0" animation="delay: 250" onclick="toggleVisibility('image2')" animation__scale="property: scale; to: 1.1 1.1 1.1; dur: 100; startEvents: mouseenter" animation__scale_reverse="property: scale; to: 1 1 1; dur: 100; startEvents: mouseleave">
+                <a-text value="CURRICULUM" position="-1 0.06 0.5" font="roboto" font-size="0.7" color="#050505" width="7.0"></a-text>
+            </a-box>
+            <a-image id="image2" mixin="image-mixin" src="media/curriculum_course.jpg" visible="false"></a-image>
+            
+            <!-- Box 3 -->
+            <a-box id="box3" mixin="scale unhinge" color="#7BC8A4" rotation="-180 0 0" position="0 -6 0" animation="delay: 500" onclick="toggleVisibility('image3')" animation__scale="property: scale; to: 1.1 1.1 1.1; dur: 100; startEvents: mouseenter" animation__scale_reverse="property: scale; to: 1 1 1; dur: 100; startEvents: mouseleave">
+                <a-text value="INFORMATION" position="-1 0.1 0.5" font="roboto" font-size="0.7" color="#050505" width="7.0"></a-text>
+            </a-box>
+            <a-image id="image3" mixin="image-mixin" src="media/information_course.jpg" visible="false"></a-image>
+            
+            <!-- Box 4 -->
+            <a-box id="box4" mixin="scale unhinge" color="#4CC3D9" rotation="-180 0 0" animation="delay: 750" onclick="toggleVideoVisibility()" animation__scale="property: scale; to: 1.1 1.1 1.1; dur: 100; startEvents: mouseenter" animation__scale_reverse="property: scale; to: 1 1 1; dur: 100; startEvents: mouseleave">
+                <a-text value="INTRODUCION" position="-1 -0.21 0.5" font="roboto" font-size="0.7" color="#050505" width="7.0"></a-text>
+            </a-box>
+            <a-image src="#logoviro" position="5.0 1.5 0.8" scale="2 2 2" rotation="0 -30 0" geometry="primitive: plane; width:1; height:1" visible="true"></a-image>
+        </a-entity>
+
+        <a-plane id="video-border" width="17" height="10" position="2 6.5 -20" color="#440000" rotation="0 -20 0" scale="1.0 1.0 1.0" class="clickable" visible="false" click-handler>
+            <a-video id="video" width="16" height="9" position="0 0 0.1" src="#video" visible="true"></a-video>
+        </a-plane>
+    </a-scene>
+    
+    <script>
+        var video = document.querySelector('#video');
+        video.addEventListener('ended', function () {
+            video.style.display = 'none';
+            var videoBorder = document.querySelector('#video-border');
+            videoBorder.setAttribute('visible', false);
+        });
+    </script>
+    
+    <script>
+        function toggleVisibility(elementId) {
+            // Hide all images
+            var images = document.querySelectorAll('a-image');
+            images.forEach(function (image) {
+            image.setAttribute("visible", false);
+            });
+            // Show the selected image
+            var selectedImage = document.getElementById(elementId);
+            selectedImage.setAttribute("visible", true);
+        }
+        function toggleVideoVisibility() {
+            // Hide all images
+            var images = document.querySelectorAll('a-image');
+            images.forEach(function (image) {
+            image.setAttribute("visible", false);
+            });
+            var videoPlane = document.getElementById('video-border');
+            var video = document.getElementById('video');
+            // Toggle visibility of the video plane
+            var isVisible = videoPlane.getAttribute("visible") === true;
+            videoPlane.setAttribute("visible", !isVisible);
+            // Pause or play the video based on visibility
+            if (!isVisible) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        }
+    </script>
+</body>
+</html>
